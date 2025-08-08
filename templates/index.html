@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Eco-Scanner 🌍</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f0fdf4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0, 128, 0, 0.1);
+      border: 1px solid #c8e6c9;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 2px solid #a5d6a7;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    input[type="text"]:focus {
+      border-color: #2e7d32;
+      outline: none;
+    }
+
+    button {
+      background-color: #2e7d32;
+      color: white;
+      padding: 14px 0;
+      font-size: 1.1em;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #1b5e20;
+    }
+
+    .result {
+      background-color: #fefefe;
+      border-left: 6px solid #66bb6a;
+      padding: 20px;
+      margin-top: 25px;
+      border-radius: 8px;
+      box-shadow: 0 8px 15px rgba(100, 200, 100, 0.15);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .unsustainable {
+      border-left-color: #e53935;
+      box-shadow: 0 8px 15px rgba(250, 100, 100, 0.15);
+    }
+
+    .loading {
+      font-style: italic;
+      color: #888;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🌿 Eco-Scanner</h1>
+
+    <form id="ecoForm">
+      <label for="product">Enter product name:</label>
+      <input type="text" id="product" name="product" placeholder="e.g. plastic, bamboo, cotton..." required
+        list="product-suggestions" />
+      <datalist id="product-suggestions">
+        <option value="Plastic Bottle">
+        <option value="Bamboo Toothbrush">
+        <option value="Paper Bag">
+        <option value="Polyester T-shirt">
+        <option value="Glass Jar">
+        <option value="Single-use Coffee Pod">
+        <option value="Recycled Aluminum Can">
+        <option value="Cotton Swab">
+        <option value="Reusable Water Bottle">
+        <option value="Styrofoam">
+        <option value="Hemp Fabric">
+        <option value="Leather Shoes">
+        <option value="E-waste">
+        <option value="Cardboard Box">
+        <option value="Silicone Container">
+        <option value="Compostable Utensils">
+        <option value="Plastic Straw">
+        <option value="Reusable Shopping Bag">
+        <option value="PVC Pipe">
+        <option value="Wool Sweater">
+        <option value="Disposable Razor">
+        <option value="Cork Flooring">
+        <option value="Nylon Rope">
+        <option value="LED Light Bulb">
+        <option value="Microfiber Cloth">
+        <option value="Soy Candle">
+        <option value="Plastic Cling Wrap">
+        <option value="Reusable Cloth Diaper">
+        <option value="K-Cup">
+        <option value="Natural Rubber">
+        <option value="Chemical Sunscreen">
+        <option value="Tin Foil">
+        <option value="Organic Cotton">
+        <option value="Disposable Vape">
+        <option value="Upcycled Furniture">
+        <option value="Acrylic Paint">
+        <option value="Bamboo Flooring">
+        <option value="Lead-acid Battery">
+        <option value="Linen Shirt">
+        <option value="Neoprene Wetsuit">
+        <option value="Recycled Glass">
+        <option value="Fluorocarbon Fishing Line">
+        <option value="Jute Bag">
+        <option value="Vinyl Records">
+        <option value="Bioplastic Cutlery">
+        <option value="Glitter">
+        <option value="Sustainable Wood">
+        <option value="Non-rechargeable Battery">
+        <option value="Refillable Soap Dispenser">
+        <option value="Fossil Fuels">
+        <option value="Solar Panel">
+        <option value="Synthetic Rubber">
+        <option value="Stainless Steel Water Bottle">
+        <option value="Recycled Plastic">
+        <option value="Ceramic Mug">
+        <option value="Latex Balloons">
+        <option value="Hemp Rope">
+        <option value="Microwaveable Tray">
+        <option value="Plant-based Milk Carton">
+        <option value="Incandescent Light Bulb">
+      </datalist>
+      <button type="submit">Check Sustainability</button>
+    </form>
+    <div id="result" class="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('ecoForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const product = document.getElementById('product').value.trim();
+
+      resultDiv.innerHTML = '<p class="loading">🔍 Analyzing the product...</p>';
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'result';
+
+      try {
+        const response = await fetch('/check', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ product })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          resultDiv.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+          return;
+        }
+
+        resultDiv.classList.toggle('unsustainable', !data.sustainable);
+
+        resultDiv.innerHTML = `
+          <h2>${data.message}</h2>
+          <p><strong>📦 Product:</strong> ${data.product}</p>
+          <p><strong>${data.sustainable ? "✅ Products made from it" : "🔁 Try these alternatives"}:</strong> ${data.suggestion_or_alternative}</p>
+          <p><strong>♻️ Tip:</strong> ${data.tip}</p>
+          <p><strong>🔄 Recycle / Repurpose:</strong> ${data.recycle}</p>
+        `;
+      } catch (err) {
+        resultDiv.innerHTML = `<p style="color: red;">Error connecting to server.</p>`;
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+flask
+langchain
+langchain-google-genai
+google-generativeai==0.8.5
